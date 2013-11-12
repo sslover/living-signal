@@ -9,9 +9,6 @@ var request = require('request'); // library to make requests to remote urls
 var moment = require("moment"); // date manipulation library
 var models = require("../models/models.js"); //db model
 var http = require('http');
-var darksky = require("darksky");
-
-var weatherClient = new darksky.Client("a345a0f8bba13003d1bb79fa4fad60d6");
 
 /*GET 
 */
@@ -19,8 +16,7 @@ var weatherClient = new darksky.Client("a345a0f8bba13003d1bb79fa4fad60d6");
 
 exports.getWeather = function(req, res) {
 
-        var remote_api_url = 'https://api.forecast.io/forecast/a345a0f8bba13003d1bb79fa4fad60d6/40.729523,-73.993445';
-        // var remote_api_url = 'http://localhost:5000/data/astronauts';
+        var remote_api_url = 'https://api.forecast.io/forecast/'+process.env.DarkSkyKey+'/40.729523,-73.993445';
 
         // make a request to remote_api_url
         request.get(remote_api_url, function(error, response, data){
@@ -45,26 +41,26 @@ exports.getWeather = function(req, res) {
                 console.log("status is " + status);
                 console.log("temperature is " + temperature);
 
-			// // save the weather to the database first
-			// 	newWeather = new models.Weather();
-			// 		newWeather.status = status;
-			// 		newWeather.temperature = temperature;
+			// save the weather to the database first
+				newWeather = new models.Weather();
+					newWeather.status = status;
+					newWeather.temperature = temperature;
 
-			// 		        // prepare data for JSON
+					        // prepare data for JSON
 
-			// 	// save the newWeather to the database
-			// 	newWeather.save(function(err){
-			// 		if (err) {
-			// 			console.error("Error on saving new weather");
-			// 			console.error("err");
-			// 			return res.send("There was an error when adding the new weather");
+				// save the newWeather to the database
+				newWeather.save(function(err){
+					if (err) {
+						console.error("Error on saving new weather");
+						console.error("err");
+						return res.send("There was an error when adding the new weather");
 
-			// 		} else {
-			// 			console.log("Created a new weather record!");
-			// 			console.log(newUser);
-			// 		}
+					} else {
+						console.log("Created a new weather record!");
+						console.log(newWeather);
+					}
 
-			// 	});
+				});
 
                     res.json({ status : 'OK', data: weatherData });
                 }        

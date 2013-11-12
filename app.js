@@ -7,6 +7,8 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var mongoose = require('mongoose');
+var cronJob = require('cron').CronJob;
+var request = require('request'); // library to make requests to remote urls
 
 
 // the ExpressJS App
@@ -35,9 +37,9 @@ app.configure(function(){
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 
-  // database - skipping until DB ready
-  // app.db = mongoose.connect(process.env.MONGOLAB_URI);
-  // console.log("connected to database");
+  // database setup
+  app.db = mongoose.connect(process.env.MONGOLAB_URI);
+  console.log("connected to database");
   
 });
 
@@ -48,11 +50,19 @@ app.configure('development', function(){
 // ROUTES
 
 var routes = require('./routes/index.js');
-var darksky = require("darksky");
 
 // API method to get the current weather
-app.get('/getWeather', routes.getWeather);
+// runs every 15 minutes with a Cron job
+new cronJob('0,15,30,45 * * * *', function(){
+    request('http://poppop.herokuapp.com/getWeather', function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        console.log(body) // Print the google web page.
+      }
+    })
+}, null, true);
 
+// or manually do it by going to a URL
+app.get('/getWeather', routes.getWeather);
 
 // create NodeJS HTTP server using 'app'
 http.createServer(app).listen(app.get('port'), function(){
