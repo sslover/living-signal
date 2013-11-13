@@ -10,6 +10,8 @@ var moment = require("moment"); // date manipulation library
 var models = require("../models/models.js"); //db model
 var http = require('http');
 
+var serverURL = "128.122.98.53:3000"; 
+
 /*GET 
 */
 // API route to get the current weather
@@ -115,9 +117,19 @@ exports.getWeatherAPI = function() {
 
 					});
 
+				// now, lets post that data to the API
+                postWeather(status);
                 }        
         })
       
+}
+
+function postWeather (status){
+	// post the current weather status to the API
+	// possible values --> clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
+
+
+
 }
 
 
