@@ -126,8 +126,43 @@ exports.getWeatherAPI = function() {
 
 function postWeather (status){
 	// post the current weather status to the API
-	// possible values --> clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
+	// possible values --> clear-day(6), clear-night(5), rain(2), snow(1), sleet(2), wind(3), fog(2), cloudy(4), partly-cloudy-day(5), or partly-cloudy-night(4)
 
+	var numStatus; // numerical number for the weather status
+	switch (status) {
+	    case "snow":
+	        numStatus = 1;
+	        break;
+	    case "sleet":
+	        numStatus = 2;
+	        break;
+	    case "rain":
+	        numStatus = 2;
+	        break;
+	    case "fog":
+	        numStatus = 2;
+	        break;
+	    case "wind":
+	        numStatus = 3;
+	        break;
+	    case "snow":
+	        numStatus = 1;
+	        break;
+	    case "snow":
+	        numStatus = 1;
+	        break;
+	    case "snow":
+	        numStatus = 1;
+	        break;
+	    case "snow":
+	        numStatus = 1;
+	        break;
+	    case "snow":
+	        numStatus = 1;
+	        break;  
+		default:
+  			numStatus = 1;
+	}
 
 
 }
