@@ -52,17 +52,14 @@ app.configure('development', function(){
 var routes = require('./routes/index.js');
 
 // API method to get the current weather
-// runs every 15 minutes with a Cron job
-// new cronJob('* * * * * *', function(){
-//     request('http://poppop.herokuapp.com/getWeather', function (error, response, body) {
-//       if (!error && response.statusCode == 200) {
-//         console.log(body) // Print the google web page.
-//       }
-//     })
-// }, null, true);
-
-// or manually do it by going to a URL
 app.get('/getWeather', routes.getWeather);
+
+// CRON JOBS //
+// API method to get the current weather
+// runs every 15 minutes with a Cron job
+new cronJob('0,15,30,45 * * * *', function(){
+    routes.getWeatherAPI();
+}, null, true);
 
 // create NodeJS HTTP server using 'app'
 http.createServer(app).listen(app.get('port'), function(){
