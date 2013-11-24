@@ -66,7 +66,7 @@ exports.getWeather = function(req, res) {
 
                     res.json({ status : 'OK', data: weatherData });
                 }        
-        })
+        });
 };
 
 exports.getWeatherAPI = function() {
@@ -120,7 +120,7 @@ exports.getWeatherAPI = function() {
 				// now, lets post that data to the API
                 postWeather(status);
                 }        
-        })
+        });
       
 }
 
