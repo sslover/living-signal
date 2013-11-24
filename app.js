@@ -54,12 +54,12 @@ var routes = require('./routes/index.js');
 // API method to get the current weather
 app.get('/getWeather', routes.getWeather);
 
-// CRON JOBS //
+// CRON JOBS // only works in local for testing
 // API method to get the current weather
 // runs every 15 minutes with a Cron job
-new cronJob('0,15,30,45 * * * *', function(){
-    routes.getWeatherAPI();
-}, null, true);
+// new cronJob('* * * * *', function(){
+//     routes.getWeatherAPI();
+// }, null, true);
 
 // create NodeJS HTTP server using 'app'
 http.createServer(app).listen(app.get('port'), function(){

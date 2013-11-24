@@ -10,7 +10,7 @@ var moment = require("moment"); // date manipulation library
 var models = require("../models/models.js"); //db model
 var http = require('http');
 
-var serverURL = "128.122.98.53:3000"; 
+var serverURL = "http://128.122.98.53:3000/"; 
 
 /*GET 
 */
@@ -145,26 +145,42 @@ function postWeather (status){
 	    case "wind":
 	        numStatus = 3;
 	        break;
-	    case "snow":
-	        numStatus = 1;
+	    case "cloudy":
+	        numStatus = 4;
 	        break;
-	    case "snow":
-	        numStatus = 1;
+	    case "partly-cloudy-night":
+	        numStatus = 4;
 	        break;
-	    case "snow":
-	        numStatus = 1;
+	    case "partly-cloudy-day":
+	        numStatus = 5;
 	        break;
-	    case "snow":
-	        numStatus = 1;
+	    case "clear-night":
+	        numStatus = 5;
 	        break;
-	    case "snow":
-	        numStatus = 1;
+	    case "clear-day":
+	        numStatus = 6;
 	        break;  
 		default:
-  			numStatus = 1;
+  			numStatus = 4;
 	}
 
+	console.log("the number status is " + numStatus);
+
+	// get the time stamp
+	var currentTime = new Date().getTime();
+
+	// data object
+	var data = { "updates" : [{ "measureName": "Weather", "value": numStatus, "timeStamp" : currentTime, "description" : "weather at " + currentTime}]}
+
+	// now let's post it to the server
+	request.post({
+	  headers: {'content-type' : 'application/x-www-form-urlencoded'},
+	  url:     'http://128.122.98.53:3000/Session/BroadwayWaverly/Update/',
+	  json:    data
+	}, function(error, response, body){
+	  	console.log("******** the response from the server is ********")
+	  	console.log(body);
+	});
 
 }
-
 
