@@ -1,5 +1,3 @@
-#! /app/bin/node
-
 console.log("calling the scheduled task");
 
 var routes = require('./routes/index.js');
@@ -9,4 +7,3 @@ function updateData() {
   routes.getWeatherAPI();
 }
 updateData();
-process.exit();

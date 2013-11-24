@@ -1,3 +1,3 @@
 web: node app.js
 
-getData : node getData.js
+getData: node getData.js
