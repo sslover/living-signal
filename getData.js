@@ -13,6 +13,7 @@ function updateData() {
 
 function getWeather() {
 
+		console.log("getWeather called!");
         var remote_api_url = 'https://api.forecast.io/forecast/'+process.env.DarkSkyKey+'/40.729523,-73.993445';
 
         // make a request to remote_api_url
