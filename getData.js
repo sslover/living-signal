@@ -2,9 +2,9 @@ console.log("calling the scheduled task");
 
 var request = require('request'); // library to make requests to remote urls
 var moment = require("moment"); // date manipulation library
-var models = require("./models/models.js"); //db model
+var models = require("../models/models.js"); //db model
 var http = require('http');
-var routes = require('./routes/index.js');
+var routes = require('../routes/index.js');
 
 function updateData() {
   console.log("getting the new data");
