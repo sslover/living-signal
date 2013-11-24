@@ -28,8 +28,6 @@ exports.getWeather = function(req, res) {
                         return;
                 }
 
-                else{
-                // Step 2 - convert 'data' to JS
                 // convert data JSON string to native JS object
                 var weatherData = JSON.parse(data);
 
@@ -48,8 +46,6 @@ exports.getWeather = function(req, res) {
 					newWeather.status = status;
 					newWeather.temperature = temperature;
 
-					        // prepare data for JSON
-
 				// save the newWeather to the database
 				newWeather.save(function(err){
 					if (err) {
@@ -64,9 +60,9 @@ exports.getWeather = function(req, res) {
 
 				});
 
-                    res.json({ status : 'OK', data: weatherData });
-                }        
-        });
+                res.json({ status : 'OK', data: weatherData });
+          
+        })
 };
 
 exports.getWeatherAPI = function() {
