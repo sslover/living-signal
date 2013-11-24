@@ -29,7 +29,8 @@ exports.getWeather = function(req, res) {
                 }
 
                 console.log("GOT HERE!");
-                
+                console.log(data);
+
                 // convert data JSON string to native JS object
                 var weatherData = JSON.parse(data);
 
@@ -37,8 +38,8 @@ exports.getWeather = function(req, res) {
                 console.log("***********");
 
                 // lets pull out the status and the current temperature, and save them to DB
-                var status = weatherData.currently.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
-                var temperature = weatherData.currently.temperature;
+                var status = data.currently.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
+                var temperature = data.currently.temperature;
 
                 console.log("status is " + status);
                 console.log("temperature is " + temperature);
