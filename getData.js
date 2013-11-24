@@ -7,3 +7,4 @@ function updateData() {
   routes.getWeatherAPI();
 }
 updateData();
+process.exit();
