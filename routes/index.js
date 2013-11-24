@@ -28,6 +28,8 @@ exports.getWeather = function(req, res) {
                         return;
                 }
 
+                console.log("GOT HERE!");
+                
                 // convert data JSON string to native JS object
                 var weatherData = JSON.parse(data);
 
