@@ -1,0 +1,164 @@
+body{
+	background-color: #34495e;;
+	font-family: 'Titillium Web', sans-serif;
+}
+
+img {
+	-webkit-border-radius: 30px; /* Saf3+, Chrome */
+	border-radius: 30px; /* Opera 10.5, IE 9 */
+	/*-moz-border-radius: 30px; Disabled for FF1+ */
+}
+
+a, a:hover{
+	color: #4099FF;
+}
+.row, .span12{
+	width: 100%;
+	margin-left: 0px;
+}
+
+.span5 {
+	width: 95%;
+}
+
+.span6{
+	width: 49%;
+}
+
+.centerit{
+	text-align: center;
+}
+
+.vs {
+	display: inline-block;
+	line-height: 0px;
+	margin: 0px 8px;
+}
+
+#button1{
+	display: inline-block;
+	margin: 0px 8px;
+	color: #fff;
+	text-decoration: none;
+	background-color: #E67E22;
+	font-size: 18px;
+	height: 19px;
+	padding: 1px 19px;
+	line-height: 12px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	padding-top: 11px;
+}
+
+h1{
+	font-family: 'Arvo', 'Titillium Web', serif;
+	color: #fff;
+	text-align: center;
+	margin-top: 50px;
+	line-height: 35px;
+	margin-bottom: -18px;
+}
+
+h3,h4{
+	font-family: 'Titillium Web', serif;
+	color: #fff;
+	text-align: center;
+	font-style: italic;
+	line-height: 35px;
+}
+
+h5{
+	margin-top: -10px;
+	margin-bottom: 15px;
+	color: #fff;
+}
+.topic1{
+	margin-top: 0px;
+	color: #3498DB;
+	margin-bottom: 25px;
+	margin-bottom: -10px;
+}
+
+#topic1 span, #topic1 h4{
+	color: #3498DB;	
+}
+
+.topic2{
+	margin-top: 0px;
+	color: #E67E22;
+	margin-bottom: 25px;
+	margin-bottom: -10px;
+}
+
+#topic2 span, #topic2 h4{
+	color: #E67E22;	
+}
+
+.chart-bar{
+	width: 50%;
+	float: left;
+}
+.chart-bar span {
+	color: white;
+	font-style: normal;
+}
+
+#topic1-chart{
+	background-color: #3498DB;
+	height: 60px;
+}
+
+#topic2-chart{
+	background-color: #E67E22;
+	height: 60px;
+}
+
+.span2{
+	text-align: center;
+}
+
+.span2 h4{
+	font-style: normal;
+	line-height: 18px;
+}
+
+ul{
+  list-style: none;
+  margin-bottom: 25px;
+}
+
+li{
+  display: inline;
+}
+
+li img {
+	margin: 3px;
+	width: 30px;
+	height: 30px;
+	-webkit-border-radius: 30px; /* Saf3+, Chrome */
+	border-radius: 30px; /* Opera 10.5, IE 9 */
+	/*-moz-border-radius: 30px; Disabled for FF1+ */
+}
+
+#go {
+	display: none;
+}
+
+.form-group {
+ 	display: inline-block;
+}
+
+@media (min-width: 481px) and (max-width: 1080px) {
+	.span6{
+		width: 47%;
+		margin-left: 0px;
+	}
+}
+
+@media (max-width: 480px){
+	.span6{
+		width: 43%;
+		margin-left: 0px;
+	}
+}
