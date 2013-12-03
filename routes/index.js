@@ -224,6 +224,8 @@ function getWeatherAPI(){
                 else{
 	                // Step 2 - convert 'data' to JS
 	                // convert data JSON string to native JS object
+	              	console.log(data);
+
 	                var weatherData = JSON.parse(data);
 
 	                console.log(weatherData);
