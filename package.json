@@ -11,7 +11,8 @@
     "cron" : "*",
     "mturk" : "*",
     "ejs" : "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "darksky": "*"
   },
 
   "engines" : {

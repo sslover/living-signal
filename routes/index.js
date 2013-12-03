@@ -49,7 +49,7 @@ exports.index = function(req, res) {
 
 exports.getWeather = function(req, res) {
 
-        var remote_api_url = 'https://api.forecast.io/forecast/'+process.env.DarkSkyKey+'/40.729523,-73.993445';
+        var remote_api_url = 'https://api.forecast.io/forecast/a345a0f8bba13003d1bb79fa4fad60d6/40.729523,-73.993445';
 
         // make a request to remote_api_url
         request.get(remote_api_url, function(error, response, data){
@@ -211,7 +211,7 @@ mturk.on('HITReviewable', function(hitId) {
 
 function getWeatherAPI(){
 
-        var remote_api_url = 'https://api.forecast.io/forecast/'+process.env.DarkSkyKey+'/40.729523,-73.993445';
+        var remote_api_url = 'https://api.forecast.io/forecast/a345a0f8bba13003d1bb79fa4fad60d6/40.729523,-73.993445';
 
         // make a request to remote_api_url
         request.get(remote_api_url, function(error, response, data){
@@ -224,7 +224,7 @@ function getWeatherAPI(){
                 else{
 	                // Step 2 - convert 'data' to JS
 	                // convert data JSON string to native JS object
-	              	console.log(data);
+	              	console.log(weatherData);
 
 	                var weatherData = JSON.parse(data);
 
