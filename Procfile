@@ -1,2 +1,2 @@
 web: node app.js
-worker: node getData.js
+getData: node getData.js
