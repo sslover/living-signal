@@ -14,8 +14,11 @@ var fs = require('fs');
 
 var microsoftServerURL = "http://128.122.98.53:3000/"; 
 
-var dataSources = new Array(); // a global array to keep all our current data
-var emotions = new Array();
+var dataSources = []; // a global array to keep all our current data, before we send to API
+var emotions = []; // a gloal array to hold all our current emotions, after returned from API
+
+var currentEmotion; // a global string to hold the current computed emotion
+
 
 // Mechnical Turk details//
 var config = {
@@ -38,7 +41,7 @@ exports.index = function(req, res) {
 
 	    //build and render template
 	    var templateData = {
-	            data : emotions,
+	            data : currentEmotion,
 	    }
 
 	    console.log(templateData);
@@ -82,18 +85,18 @@ exports.getWeather = function(req, res) {
 					newWeather.temperature = temperature;
 
 				// save the newWeather to the database
-				newWeather.save(function(err){
-					if (err) {
-						console.error("Error on saving new weather");
-						console.error("err");
-						return res.send("There was an error when adding the new weather");
+				// newWeather.save(function(err){
+				// 	if (err) {
+				// 		console.error("Error on saving new weather");
+				// 		console.error("err");
+				// 		return res.send("There was an error when adding the new weather");
 
-					} else {
-						console.log("Created a new weather record!");
-						console.log(newWeather);
-					}
+				// 	} else {
+				// 		console.log("Created a new weather record!");
+				// 		console.log(newWeather);
+				// 	}
 
-				});
+				// });
 
                 res.json({ status : 'OK', data: weatherData });
           
@@ -111,7 +114,11 @@ exports.postMturk = function(req, res) {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-	    console.log("Created HITType "+hitType.id);
+		if (hitType.id == undefined){
+			console.log("some error on te hit");
+		}
+		else{
+	    console.log("Created HITType " + hitType.id);
 
 	    // 2. Render the Question XML
 	    var templateFile = fs.readFileSync(__dirname+'/static/questionForm.xml.ejs', 'ascii'); //__dirname+"/views/questionForm.xml.ejs"
@@ -128,7 +135,7 @@ exports.postMturk = function(req, res) {
 	            console.log("Created HIT "+hit.id);
 	            res.json({ status : 'OK', data: hit });
 	        });
-	   
+	   	  }
 	    
 	    });
 
@@ -139,6 +146,11 @@ mturk.on('HITReviewable', function(hitId) {
   console.log('HIT with ID ' + hitId + ' HITReviewable');
   var options = {assignmentStatus: "Submitted"};
   mturk.HIT.getAssignments(hitId, options, function(err, numResults, totalNumResults, pageNumber, assignments) {
+  	if (assignments == undefined){
+  		console.log("assignments are undefined");
+  		currentEmotion = "Attentively upbeat";
+  	}
+  	else{
     assignments.forEach(function(assignment) {
       // review and store the data
       console.log(assignment);
@@ -148,6 +160,9 @@ mturk.on('HITReviewable', function(hitId) {
       		 console.log("it is already approved");
       }
       else{
+
+		 //reset array for fresh data
+		 emotions = [];
 
           // it's fresh data, so we'll pull it out, post it to the server, and approve the comment
 	      var peopleNum = assignment.answer.QuestionFormAnswers.Answer[0].SelectionIdentifier;
@@ -206,6 +221,7 @@ mturk.on('HITReviewable', function(hitId) {
 	  	}
   	   }
     });
+	}
   });
 });
 
@@ -338,7 +354,7 @@ function serverPost(data){
 function getSessionResults(measure){
 
 		var sessionName = "BroadwayWaverly";
-		var entity = "Poppop";
+		var entity = "PopPop"+measure;
 		var startTime = new Date().getTime() - 15000; // current time minues 15 minutes 
         var remote_api_url = 'http://128.122.98.53:3000/SessionResult/?session='+sessionName+'&entity='+entity+'&starttime='+startTime+'&resolution=0&measure='+measure;
 
@@ -359,12 +375,76 @@ function getSessionResults(measure){
                 console.log(sessionData);
                 console.log("***********");
 
+                var emotionData = {
+                	measure: sessionData.measureName,
+                	emotion: sessionData.entityResponse[0].emotion,
+                	value: sessionData.entityResponse[0].runVal
+                }
                 //push into the emotions array
-                emotions.push(sessionData.entityResponse[0].emotion);
-
+                emotions.push(emotionData);
+                console.log(emotions);
+                console.log("***********");
+                // once the array is 4, we can compute which emotion we want
+                if (emotions.length == 4) {
+                	determineEmotion(emotions);
+                }
                 return sessionData;
    
         })
 
 }
 
+function determineEmotion(data){
+
+	//typical data structure
+
+	// [ { measure: 'Cars', emotion: 'Attentively Upbeat', value: 4 },
+	// { measure: 'Jaywalkers', emotion: 'Happy', value: 2 },
+	// { measure: 'People', emotion: 'Happy', value: 4 },
+	// { measure: 'Weather', emotion: 'Happy', value: 4 } ]
+
+	console.log("in determineEmotion");
+	
+	// need to figure out where each measure is in the array, because it's not always the same
+	function arrayObjectIndexOf(myArray, searchTerm, property) {
+	    for(var i = 0, len = myArray.length; i < len; i++) {
+	        if (myArray[i][property] === searchTerm) return i;
+	    }
+	    return -1;
+	}
+
+	var jaywalkersNum = arrayObjectIndexOf(data, "Jaywalkers", "measure");
+	var weatherNum = arrayObjectIndexOf(data, "Weather", "measure");
+	var carsNum = arrayObjectIndexOf(data, "Cars", "measure");
+	var peopleNum = arrayObjectIndexOf(data, "People", "measure");
+
+	// if jaywalking is high, emotion is distressed/alarmed
+	if (data[jaywalkersNum].value >= 5){
+		currentEmotion = "Distressed";
+	}
+	// if weather is really bad, emotion is a bit unhappy
+	//measure 4 is weather
+	else if (data[weatherNum].value <= 2){
+		currentEmotion = "A bit unhappy";
+	}
+	// lots of people and lots of cars
+	else if (data[peopleNum].value >= 3 &&  data[carsNum].value>=3){
+		currentEmotion = "Attentively upbeat";
+	}
+	// lots of people, not lots of cars
+	else if (data[peopleNum].value >= 3 &&  data[carsNum].value<3){
+		currentEmotion = "Happy";
+	}
+	// Not lots of people, not lots of cars
+	else if (data[peopleNum].value < 3 &&  data[carsNum].value<3){
+		currentEmotion = "Sleepy";
+	}
+	// else, if it doesn't meet the above conditions, then he's his default state, which is Attentively upbeat
+	else{
+		currentEmotion = "Attentively upbeat";
+	}
+
+
+	console.log("currentEmotion is " + currentEmotion);
+
+}

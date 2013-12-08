@@ -31,7 +31,11 @@ function postMturk() {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-	    console.log("Created HITType "+hitType.id);
+		if (hitType.id == undefined){
+			console.log("some error on te hit");
+		}
+		else{
+	    console.log("Created HITType " + hitType.id);
 
 	    // 2. Render the Question XML
 	    var templateFile = fs.readFileSync(__dirname+'/static/questionForm.xml.ejs', 'ascii'); //__dirname+"/views/questionForm.xml.ejs"
@@ -46,9 +50,8 @@ function postMturk() {
 	        mturk.HIT.create(hitType.id, questionXML, lifeTimeInSeconds, {}, function(err, hit){
 	        	console.log(hit);
 	            console.log("Created HIT "+hit.id);
-	            process.exit();
 	        });
-	   
+	   	  }
 	    
 	    });
 
