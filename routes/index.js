@@ -148,7 +148,6 @@ mturk.on('HITReviewable', function(hitId) {
   mturk.HIT.getAssignments(hitId, options, function(err, numResults, totalNumResults, pageNumber, assignments) {
   	if (assignments == undefined){
   		console.log("assignments are undefined");
-  		currentEmotion = "Attentively upbeat";
   	}
   	else{
     assignments.forEach(function(assignment) {
