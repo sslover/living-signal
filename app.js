@@ -123,8 +123,8 @@ sockets.sockets.on('connection', function(socket) {
 // listens for when a HIT is returned and reviewable. For our purposes, we just approve automatically for now
 mturk.on('HITReviewable', function(hitId) {
   console.log('HIT with ID ' + hitId + ' HITReviewable');
-  var options = {assignmentStatus: "Submitted"};
-  mturk.HIT.getAssignments(hitId, options, function(err, numResults, totalNumResults, pageNumber, assignments) {
+  var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Ascending", pageSize:1};
+  mturk.HIT.getAssignments(hitId, {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Ascending", pageSize:1}, function(err, numResults, totalNumResults, pageNumber, assignments) {
     if (assignments == undefined){
       console.log("assignments are undefined");
     }
