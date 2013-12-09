@@ -73,8 +73,8 @@ exports.getWeather = function(req, res) {
                 console.log("***********");
 
                 // lets pull out the status and the current temperature, and save them to DB
-                var status = weatherData.currently.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
-                var temperature = weatherData.currently.temperature;
+                var status = weatherData.hourly.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
+                var temperature = weatherData.hourly.temperature;
 
                 console.log("status is " + status);
                 console.log("temperature is " + temperature);
@@ -114,8 +114,8 @@ exports.postMturk = function(req, res) {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-		if (hitType.id == undefined){
-			console.log("some error on te hit");
+		if (hitType == undefined){
+			console.log("some error on the hit");
 		}
 		else{
 	    console.log("Created HITType " + hitType.id);
@@ -248,8 +248,8 @@ function getWeatherAPI(){
 	                console.log("***********");
 
 	                // lets pull out the status and the current temperature, and save them to DB
-	                var status = weatherData.currently.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
-	                var temperature = weatherData.currently.temperature;
+	                var status = weatherData.hourly.icon; //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night 
+	                var temperature = weatherData.hourly.temperature;
 
 	                console.log("status is " + status);
 	                console.log("temperature is " + temperature);
@@ -403,7 +403,7 @@ function determineEmotion(data){
 	// { measure: 'People', emotion: 'Happy', value: 4 },
 	// { measure: 'Weather', emotion: 'Happy', value: 4 } ]
 
-	console.log("in determineEmotion");
+	console.log("......determining emotion....");
 	
 	// need to figure out where each measure is in the array, because it's not always the same
 	function arrayObjectIndexOf(myArray, searchTerm, property) {
