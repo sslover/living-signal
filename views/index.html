@@ -17,13 +17,18 @@
 
     </head>
     <body>
-
-    <div class="row">
-      <div class="span12">       
-         <h1>Pop pop is <span id="val1">{{data}}</span></h1>
-      </div>
+    <div id="streetscape"></div>
+    <div id="info">       
+         <h1>Meet PopPop<br /> <span>a living pedestrian signal in NYC</span></h1>
+         <iframe src="//player.vimeo.com/video/56073923?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+         <div>
+            PopPop is a new type of pedestrian signal that lives, breathes, and feels just like you and me. Are there too many jaywalkers? How crowded is the corner? Is it rainy? PopPop knows and reacts accordingly. Come say hi to PopPop in NYC, at Broadway &amp; Waverly.  <a href id="current" href="#" target="_blank">Learn more about how it works.</a>
+        </div>
     </div>
-
+    <div id="emotion">
+        <img src="/img/attentively-upbeat.png" id="image_emotion" />    
+        <div style="margin-top: 5px;margin-left: 5px;">I'm currently feeling attentively upbeat <span id="val1">{{data}}</span></div>
+    </div>
     </body>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

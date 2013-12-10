@@ -11,65 +11,21 @@
 }
 
 body{
-	background-color: #34495e;;
-	font-family: 'Titillium Web', sans-serif;
-}
-
-img {
-	-webkit-border-radius: 30px; /* Saf3+, Chrome */
-	border-radius: 30px; /* Opera 10.5, IE 9 */
-	/*-moz-border-radius: 30px; Disabled for FF1+ */
+	font-family: 'Arvo', sans-serif;
+	background-color: #90DBF0;
+	background-image: url('/img/bg.png');
+	color: #fff;
 }
 
 a, a:hover{
 	color: #4099FF;
 }
-.row, .span12{
-	width: 100%;
-	margin-left: 0px;
-}
-
-.span5 {
-	width: 95%;
-}
-
-.span6{
-	width: 49%;
-}
-
-.centerit{
-	text-align: center;
-}
-
-.vs {
-	display: inline-block;
-	line-height: 0px;
-	margin: 0px 8px;
-}
-
-#button1{
-	display: inline-block;
-	margin: 0px 8px;
-	color: #fff;
-	text-decoration: none;
-	background-color: #E67E22;
-	font-size: 18px;
-	height: 19px;
-	padding: 1px 19px;
-	line-height: 12px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	padding-top: 11px;
-}
 
 h1{
 	font-family: 'munroregular', 'Titillium Web', serif;
 	color: #fff;
-	text-align: center;
-	margin-top: 50px;
-	line-height: 35px;
-	margin-bottom: -18px;
+	font-size: 50px;
+	border-bottom: 1px solid #FFF;
 }
 
 h3,h4{
@@ -85,92 +41,39 @@ h5{
 	margin-bottom: 15px;
 	color: #fff;
 }
-.topic1{
-	margin-top: 0px;
-	color: #3498DB;
-	margin-bottom: 25px;
-	margin-bottom: -10px;
+
+h1 span{
+	font-size: 30px;
+}
+#info{
+	position: relative;
+	margin-top: 22px;
+	margin-left: 715px;
+	height: 480px;
+	width: 500px;
+	background-color: rgba(10, 10, 10, 0.7);
+	padding: 20px 30px;
+	z-index: 3;
+}
+#current{
+	color: #00A2A5;
 }
 
-#topic1 span, #topic1 h4{
-	color: #3498DB;	
+#streetscape{
+	position: fixed;
+    bottom: 5px;
+    position:absolute;
+	background-image: url('/img/streetscape.png');
+	background-repeat: no-repeat;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
 }
-
-.topic2{
-	margin-top: 0px;
-	color: #E67E22;
-	margin-bottom: 25px;
-	margin-bottom: -10px;
-}
-
-#topic2 span, #topic2 h4{
-	color: #E67E22;	
-}
-
-.chart-bar{
-	width: 50%;
-	float: left;
-}
-.chart-bar span {
-	color: white;
-	font-style: normal;
-}
-
-#topic1-chart{
-	background-color: #3498DB;
-	height: 60px;
-}
-
-#topic2-chart{
-	background-color: #E67E22;
-	height: 60px;
-}
-
-.span2{
-	text-align: center;
-}
-
-.span2 h4{
-	font-style: normal;
-	line-height: 18px;
-}
-
-ul{
-  list-style: none;
-  margin-bottom: 25px;
-}
-
-li{
-  display: inline;
-}
-
-li img {
-	margin: 3px;
-	width: 30px;
-	height: 30px;
-	-webkit-border-radius: 30px; /* Saf3+, Chrome */
-	border-radius: 30px; /* Opera 10.5, IE 9 */
-	/*-moz-border-radius: 30px; Disabled for FF1+ */
-}
-
-#go {
-	display: none;
-}
-
-.form-group {
- 	display: inline-block;
-}
-
-@media (min-width: 481px) and (max-width: 1080px) {
-	.span6{
-		width: 47%;
-		margin-left: 0px;
-	}
-}
-
-@media (max-width: 480px){
-	.span6{
-		width: 43%;
-		margin-left: 0px;
-	}
+#emotion{
+	position: relative;
+	font-size: 12px;
+	margin-top: -277px;
+	margin-left: 119px;
+	z-index: 5;
+	font-weight: bold;
 }
