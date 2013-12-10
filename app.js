@@ -26,14 +26,15 @@ var dataSources = []; // a global array to keep all our current data, before we 
 var emotions = []; // a gloal array to hold all our current emotions, after returned from API
 
 var currentEmotion; // a global string to hold the current computed emotion
+var currentMessage; // a global string to hold the current message
 
 // Mechnical Turk details//
 var config = {
     url: "https://mechanicalturk.sandbox.amazonaws.com", // for production --> https://mechanicalturk.amazonaws.com
     receptor: { port: 8080, host: undefined },
-    poller: { frequency_ms: 1000 },
-    accessKeyId: "AKIAIHK7FOHCEKUN4GDA",
-    secretAccessKey: "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" 
+    poller: { frequency_ms: 10000 },
+    accessKeyId: process.env.mturkKeyId,
+    secretAccessKey: process.env.mturksecretAccessKey 
 };
 
 var mturk = require('mturk')(config);
@@ -111,7 +112,101 @@ sockets.configure(function() {
 //If the client just connected, give them the current emotion!
 sockets.sockets.on('connection', function(socket) { 
 
-  socket.emit('connection', currentEmotion);
+  console.log("currentEmotion is " + currentEmotion);
+  console.log("currentMessage is " + currentMessage);
+
+  if (currentEmotion == "distressed"){
+    currentMessage = "Come on folks, no jaywalking please!"
+  }
+  else if (currentEmotion == "a bit down"){
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "I will admit: I'm COLD.";
+            break;
+        case 2:
+            currentMessage = "Jeez it's cold out. Bundle up.";
+            break;
+        case 3:
+            currentMessage = "I guess Spring will come, some day?";
+            break; 
+      default:
+            currentMessage = "The weather is a bit bothersome.";
+    } 
+  }
+  else if (currentEmotion == "attentively upbeat"){
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Hey good-looking!";
+            break;
+        case 2:
+            currentMessage = "Look both ways my friend!";
+            break;
+        case 3:
+            currentMessage = "Streets are active today, eh?";
+            break; 
+      default:
+            currentMessage = "Hey good-looking!";
+    }    
+  }
+  else if (currentEmotion == "happy"){
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Today is a good day";
+            break;
+        case 2:
+            currentMessage = "NYC is a lovely city isn't it?";
+            break;
+        case 3:
+            currentMessage = "Stay happy New York";
+            break; 
+      default:
+            currentMessage = "Stay happy New York";
+    }    
+  }
+  // Not lots of people, not lots of cars
+  else if (currentEmotion == "sleepy"){
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+            break;
+        case 2:
+            currentMessage = "Where is everyone?";
+            break;
+        case 3:
+            currentMessage = "I'm sleepy, how are you?";
+            break; 
+      default:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+    }
+  }
+    else{
+      currentEmotion = "attentively upbeat";
+      var ran = Math.floor((Math.random()*3)+1);
+      switch (ran) {
+          case 1:
+              currentMessage = "Hey good-looking!";
+              break;
+          case 2:
+              currentMessage = "Look both ways my friend!";
+              break;
+          case 3:
+              currentMessage = "Streets are active today, eh?";
+              break; 
+        default:
+              currentMessage = "Hey good-looking!";
+      }      
+    }    
+
+  var emotionData = {
+    emotion: currentEmotion,
+    message: currentMessage
+  }
+
+  socket.emit('connection', emotionData);
 
 });
 
@@ -126,9 +221,8 @@ mturk.on('HITReviewable', function(hitId) {
   // var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Descending", pageSize:1};
   mturk.HIT.getAssignments(hitId, {}, function(err, numResults, totalNumResults, pageNumber, assignments) {
     console.log(assignments);
-    if (assignments == undefined){
-      console.log("assignments are undefined");
-
+    if (err){
+      console.log("some error on getAssignments " + err);
     }
     else{
     assignments.forEach(function(assignment) {
@@ -400,34 +494,111 @@ function determineEmotion(data){
 
   // if jaywalking is high, emotion is distressed/alarmed
   if (data[jaywalkersNum].value >= 5){
-    currentEmotion = "Distressed";
+    currentEmotion = "distressed";
+    currentMessage = "Come on folks, no jaywalking please!"
   }
   // if weather is really bad, emotion is a bit unhappy
   //measure 4 is weather
   else if (data[weatherNum].value <= 2){
-    currentEmotion = "A bit unhappy";
+    currentEmotion = "a bit down";
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "I will admit: I'm COLD.";
+            break;
+        case 2:
+            currentMessage = "Jeez it's cold out. Bundle up.";
+            break;
+        case 3:
+            currentMessage = "I guess Spring will come, some day?";
+            break; 
+      default:
+            currentMessage = "The weather is a bit bothersome.";
+    } 
   }
   // lots of people and lots of cars
   else if (data[peopleNum].value >= 3 &&  data[carsNum].value>=3){
-    currentEmotion = "Attentively upbeat";
+    currentEmotion = "attentively upbeat";
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Hey good-looking!";
+            break;
+        case 2:
+            currentMessage = "Look both ways my friend!";
+            break;
+        case 3:
+            currentMessage = "Streets are active today, eh?";
+            break; 
+      default:
+            currentMessage = "Hey good-looking!";
+    }    
   }
   // lots of people, not lots of cars
   else if (data[peopleNum].value >= 3 &&  data[carsNum].value<3){
-    currentEmotion = "Happy";
+    currentEmotion = "happy";
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Today is a good day";
+            break;
+        case 2:
+            currentMessage = "NYC is a lovely city isn't it?";
+            break;
+        case 3:
+            currentMessage = "Stay happy New York";
+            break; 
+      default:
+            currentMessage = "Stay happy New York";
+    }    
   }
   // Not lots of people, not lots of cars
   else if (data[peopleNum].value < 3 &&  data[carsNum].value<3){
-    currentEmotion = "Sleepy";
+    currentEmotion = "sleepy";
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+            break;
+        case 2:
+            currentMessage = "Where is everyone?";
+            break;
+        case 3:
+            currentMessage = "I'm sleepy, how are you?";
+            break; 
+      default:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+    }  
   }
   // else, if it doesn't meet the above conditions, then he's his default state, which is Attentively upbeat
   else{
-    currentEmotion = "Attentively upbeat";
+    currentEmotion = "attentively upbeat";
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Hey good-looking!";
+            break;
+        case 2:
+            currentMessage = "Look both ways my friend!";
+            break;
+        case 3:
+            currentMessage = "Streets are active today, eh?";
+            break; 
+      default:
+            currentMessage = "Hey good-looking!";
+    }  
   }
 
 
   console.log("currentEmotion is " + currentEmotion);
+  console.log("currentMessage is " + currentMessage);
+
+  var emotionData = {
+    emotion: currentEmotion,
+    message: currentMessage
+  }
   // emit the new emotion to the clients
-  sockets.sockets.emit('newData', currentEmotion);
+  sockets.sockets.emit('newData', emotionData);
   
   // post the new emotion to the yun
 

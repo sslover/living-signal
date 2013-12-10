@@ -8,8 +8,8 @@ var config = {
     url: "https://mechanicalturk.sandbox.amazonaws.com", // for production --> https://mechanicalturk.amazonaws.com
     receptor: { port: 8080, host: undefined },
     poller: { frequency_ms: 10000 },
-    accessKeyId: "AKIAIGNKFTBG56IKS5IA",
-    secretAccessKey: "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" 
+    accessKeyId: process.env.mturkKeyId,
+    secretAccessKey: process.env.mturksecretAccessKey 
 };
 
 var mturk = require('mturk')(config);

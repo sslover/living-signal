@@ -25,8 +25,8 @@ var config = {
     url: "https://mechanicalturk.sandbox.amazonaws.com", // for production --> https://mechanicalturk.amazonaws.com
     receptor: { port: 8080, host: undefined },
     poller: { frequency_ms: 10000 },
-    accessKeyId: "AKIAIGNKFTBG56IKS5IA",
-    secretAccessKey: "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" 
+    accessKeyId: process.env.mturkKeyId,
+    secretAccessKey: process.env.mturksecretAccessKey 
 };
 
 var mturk = require('mturk')(config);
@@ -106,6 +106,7 @@ exports.getWeather = function(req, res) {
 // function to post a new job to mturk
 exports.postMturk = function(req, res) {
 	
+	console.log("in postMturk");
 	// 1. Create the HITType
 	var Price = mturk.Price;
 	var price = new Price("0.10", "USD");
@@ -114,8 +115,8 @@ exports.postMturk = function(req, res) {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-		if (hitType == undefined){
-			console.log("some error on the hit");
+		if (err){
+			console.log("some error on the hit " + err);
 		}
 		else{
 	    console.log("Created HITType " + hitType.id);
