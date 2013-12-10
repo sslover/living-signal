@@ -31,9 +31,9 @@ var currentEmotion; // a global string to hold the current computed emotion
 var config = {
     url: "https://mechanicalturk.sandbox.amazonaws.com", // for production --> https://mechanicalturk.amazonaws.com
     receptor: { port: 8080, host: undefined },
-    poller: { frequency_ms: 10000 },
-    accessKeyId: "AKIAIA4I5F26YAE6TWTQ",
-    secretAccessKey: "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" 
+    poller: { frequency_ms: 1000 },
+    accessKeyId: "AKIAIHK7FOHCEKUN4GDA",
+    secretAccessKey: "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" 
 };
 
 var mturk = require('mturk')(config);
@@ -123,10 +123,12 @@ sockets.sockets.on('connection', function(socket) {
 // listens for when a HIT is returned and reviewable. For our purposes, we just approve automatically for now
 mturk.on('HITReviewable', function(hitId) {
   console.log('HIT with ID ' + hitId + ' HITReviewable');
-  var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Ascending", pageSize:1};
-  mturk.HIT.getAssignments(hitId, {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Ascending", pageSize:1}, function(err, numResults, totalNumResults, pageNumber, assignments) {
+  // var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Descending", pageSize:1};
+  mturk.HIT.getAssignments(hitId, {}, function(err, numResults, totalNumResults, pageNumber, assignments) {
+    console.log(assignments);
     if (assignments == undefined){
       console.log("assignments are undefined");
+
     }
     else{
     assignments.forEach(function(assignment) {
