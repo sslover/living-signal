@@ -510,8 +510,7 @@ function determineEmotion(data){
   var weatherNum = arrayObjectIndexOf(data, "Weather", "measure");
   var carsNum = arrayObjectIndexOf(data, "Cars", "measure");
   var peopleNum = arrayObjectIndexOf(data, "People", "measure");
-  var yunData = 0;
-  //data = 0 is attentively upbeat, data = 1 is happy, data = 2 is a bit down, data = 3 is distressed, data = 4 is sleepy
+  var yunData = 0; //data = 0 is attentively upbeat, data = 1 is happy, data = 2 is a bit down, data = 3 is distressed, data = 4 is sleepy
 
   // if jaywalking is high, emotion is distressed/alarmed
   if (data[jaywalkersNum].value >= 5){
