@@ -627,8 +627,11 @@ function determineEmotion(data){
   // emit the new emotion to the clients
   sockets.sockets.emit('newData', emotionData);
   
-  // post the new emotion to the yun
-  postToYun(yunData);
+  // update the text file that the yun reads
+  fs.writeFile('current.txt', yunData, function (err) {
+    if (err) throw err;
+    console.log('Text file is updated!');
+  });
 }
 
 // create NodeJS HTTP server using 'app'
