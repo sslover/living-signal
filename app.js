@@ -33,8 +33,8 @@ var config = {
     url: "https://mechanicalturk.sandbox.amazonaws.com", // for production --> https://mechanicalturk.amazonaws.com
     receptor: { port: 8080, host: undefined },
     poller: { frequency_ms: 10000 },
-    accessKeyId: "AKIAI2UGSYEDAFEGEUKA",
-    secretAccessKey: "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" 
+    accessKeyId: "AKIAI3Z4CS2CFAOM6VXA",
+    secretAccessKey: "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" 
 };
 
 var mturk = require('mturk')(config);
@@ -398,9 +398,28 @@ function getWeatherAPI(){
 
           var data = { "updates" : [{ "measureName": "Weather", "value": dataSources[3], "timeStamp" : currentTime, "description" : "weather at " + currentTime}]};         
               serverPost(data); 
-
                 }        
         });
+}
+
+// function to post to the YUN
+function postToYun(data){
+
+        //data = 0 is attentively upbeat, data = 1 is happy, data = 2 is a bit down, data = 3 is distressed, data = 4 is sleepy
+        var remote_api_url = 'http://128.122.98.50/arduino/digital/'+data;
+
+        // make a request to remote_api_url
+        request.get(remote_api_url, function(error, response, data){
+                
+                if (error){
+                        res.send("There was an error requesting to the YUN");
+                        return;
+                }
+
+            console.log("Yun RESPONSE!")
+            console.log(response);     
+            return;     
+        })  
 }
 
 // function to post to Server, based on data input
@@ -491,16 +510,20 @@ function determineEmotion(data){
   var weatherNum = arrayObjectIndexOf(data, "Weather", "measure");
   var carsNum = arrayObjectIndexOf(data, "Cars", "measure");
   var peopleNum = arrayObjectIndexOf(data, "People", "measure");
+  var yunData = 0;
+  //data = 0 is attentively upbeat, data = 1 is happy, data = 2 is a bit down, data = 3 is distressed, data = 4 is sleepy
 
   // if jaywalking is high, emotion is distressed/alarmed
   if (data[jaywalkersNum].value >= 5){
     currentEmotion = "distressed";
+    yunData = 3;
     currentMessage = "Come on folks, no jaywalking please!"
   }
   // if weather is really bad, emotion is a bit unhappy
   //measure 4 is weather
   else if (data[weatherNum].value <= 2){
     currentEmotion = "a bit down";
+    yunData = 2;
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
@@ -519,6 +542,7 @@ function determineEmotion(data){
   // lots of people and lots of cars
   else if (data[peopleNum].value >= 3 &&  data[carsNum].value>=3){
     currentEmotion = "attentively upbeat";
+    yunData = 0;
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
@@ -537,6 +561,7 @@ function determineEmotion(data){
   // lots of people, not lots of cars
   else if (data[peopleNum].value >= 3 &&  data[carsNum].value<3){
     currentEmotion = "happy";
+    yunData = 1;
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
@@ -555,6 +580,7 @@ function determineEmotion(data){
   // Not lots of people, not lots of cars
   else if (data[peopleNum].value < 3 &&  data[carsNum].value<3){
     currentEmotion = "sleepy";
+    yunData = 4;
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
@@ -573,6 +599,7 @@ function determineEmotion(data){
   // else, if it doesn't meet the above conditions, then he's his default state, which is Attentively upbeat
   else{
     currentEmotion = "attentively upbeat";
+    yunData = 0;
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
@@ -601,7 +628,7 @@ function determineEmotion(data){
   sockets.sockets.emit('newData', emotionData);
   
   // post the new emotion to the yun
-
+  postToYun(yunData);
 }
 
 // create NodeJS HTTP server using 'app'
