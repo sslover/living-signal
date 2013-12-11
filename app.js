@@ -628,7 +628,8 @@ function determineEmotion(data){
   sockets.sockets.emit('newData', emotionData);
   
   // update the text file that the yun reads
-  fs.writeFile('current.txt', yunData, function (err) {
+  var n = yunData.toString();
+  fs.writeFile('./public/current.txt', n, function (err) {
     if (err) throw err;
     console.log('Text file is updated!');
   });
