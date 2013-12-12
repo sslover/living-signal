@@ -31,7 +31,7 @@ function postMturk() {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-		if (hitType.id == undefined){
+		if (err || hitType == undefined){
 			console.log("some error on te hit");
 		}
 		else{
@@ -54,7 +54,6 @@ function postMturk() {
 	        	else{
 	        	console.log(hit);
 	            console.log("Created HIT "+hit.id);
-	            res.json({ status : 'OK', data: hit });
 	        	}
 	        });
 	   	  }

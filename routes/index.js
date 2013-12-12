@@ -115,7 +115,7 @@ exports.postMturk = function(req, res) {
 	var duration = 180; // #seconds Worker has to complete after accepting
 	var options = { keywords: "traffic, counting, people", autoApprovalDelayInSeconds: 5 };
 	mturk.HITType.create(title, description, price, duration, options, function(err, hitType) {
-		if (err){
+		if (err || hitType == undefined){
 			console.log("some error on the hit " + err);
 		}
 		else{
