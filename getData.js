@@ -48,8 +48,14 @@ function postMturk() {
 	        var options = {maxAssignments: 5}
 	        var lifeTimeInSeconds = 600; // 10 minutes
 	        mturk.HIT.create(hitType.id, questionXML, lifeTimeInSeconds, {}, function(err, hit){
+	        	if (err){
+	        		console.log("some error on the hit " + err);
+	        	}
+	        	else{
 	        	console.log(hit);
 	            console.log("Created HIT "+hit.id);
+	            res.json({ status : 'OK', data: hit });
+	        	}
 	        });
 	   	  }
 	    
