@@ -34,7 +34,6 @@ var mturk = require('mturk')(config);
 
 /*GET 
 */
-// API route to get the current weather
 exports.index = function(req, res) {
         
         console.log("main page requested");
@@ -47,6 +46,21 @@ exports.index = function(req, res) {
 	    console.log(templateData);
 
 	    res.render('index.html', templateData);
+
+}
+
+exports.manualMode = function(req, res) {
+        
+        console.log("manual page requested");
+
+	    //build and render template
+	    var templateData = {
+	            data : currentEmotion,
+	    }
+
+	    console.log(templateData);
+
+	    res.render('manual.html', templateData);
 
 }
 

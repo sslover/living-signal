@@ -82,6 +82,9 @@ var routes = require('./routes/index.js');
 //home page
 app.get('/',routes.index);
 
+//manual mode routte
+app.get('/manual',routes.manualMode);
+
 // API method to get the current weather
 app.get('/getWeather', routes.getWeather);
 
@@ -122,48 +125,48 @@ sockets.sockets.on('connection', function(socket) {
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "I will admit: I'm COLD.";
+            currentMessage = "I could use a hot chocolate.";
             break;
         case 2:
-            currentMessage = "Jeez it's cold out. Bundle up.";
+            currentMessage = "Ok, it's officially cold out.";
             break;
         case 3:
             currentMessage = "I guess Spring will come, some day?";
             break; 
       default:
-            currentMessage = "The weather is a bit bothersome.";
+            currentMessage = "I could use a hot chocolate.";
     } 
   }
   else if (currentEmotion == "attentively upbeat"){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
             break;
         case 2:
-            currentMessage = "Look both ways my friend!";
+            currentMessage = "Today is your day!";
             break;
         case 3:
-            currentMessage = "Streets are active today, eh?";
+            currentMessage = "Give me a high five?";
             break; 
       default:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
     }    
   }
   else if (currentEmotion == "happy"){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "Today is a good day";
+            currentMessage = "Today is a great day - smile!";
             break;
         case 2:
-            currentMessage = "NYC is a lovely city isn't it?";
+            currentMessage = "NYC is a lovely city with you in it.";
             break;
         case 3:
             currentMessage = "Stay happy New York";
             break; 
       default:
-            currentMessage = "Stay happy New York";
+            currentMessage = "Today is a great day - smile!";
     }    
   }
   // Not lots of people, not lots of cars
@@ -177,7 +180,7 @@ sockets.sockets.on('connection', function(socket) {
             currentMessage = "Where is everyone?";
             break;
         case 3:
-            currentMessage = "I'm sleepy, how are you?";
+            currentMessage = "I'm sleepy too";
             break; 
       default:
             currentMessage = "ZzzZzzZZzZZzzZ";
@@ -187,17 +190,17 @@ sockets.sockets.on('connection', function(socket) {
       currentEmotion = "attentively upbeat";
       var ran = Math.floor((Math.random()*3)+1);
       switch (ran) {
-          case 1:
-              currentMessage = "Hey good-looking!";
-              break;
-          case 2:
-              currentMessage = "Look both ways my friend!";
-              break;
-          case 3:
-              currentMessage = "Streets are active today, eh?";
-              break; 
-        default:
-              currentMessage = "Hey good-looking!";
+        case 1:
+            currentMessage = "Have a fun day cause you're awesome!";
+            break;
+        case 2:
+            currentMessage = "Today is your day New York!";
+            break;
+        case 3:
+            currentMessage = "Give me a high five?";
+            break; 
+      default:
+            currentMessage = "Have a fun day cause you're awesome!";
       }      
     }    
 
@@ -208,6 +211,12 @@ sockets.sockets.on('connection', function(socket) {
 
   socket.emit('connection', emotionData);
 
+  // when new data comes in, 
+  socket.on('manualData', function (data) {
+      manualEmotion(data);
+  }); 
+
+
 });
 
 
@@ -216,88 +225,88 @@ sockets.sockets.on('connection', function(socket) {
 /// MTURK Listener LOGIC////
 
 // listens for when a HIT is returned and reviewable. For our purposes, we just approve automatically for now
-mturk.on('HITReviewable', function(hitId) {
-  console.log('HIT with ID ' + hitId + ' HITReviewable');
-  // var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Descending", pageSize:1};
-  mturk.HIT.getAssignments(hitId, {}, function(err, numResults, totalNumResults, pageNumber, assignments) {
-    console.log(assignments);
-    if (err){
-      console.log("some error on getAssignments " + err);
-    }
-    else{
-    assignments.forEach(function(assignment) {
-      // review and store the data
-      console.log(assignment);
+// mturk.on('HITReviewable', function(hitId) {
+//   console.log('HIT with ID ' + hitId + ' HITReviewable');
+//   // var options = {assignmentStatus: "Submitted", sortProperty:"SubmitTime", sortDirection:"Descending", pageSize:1};
+//   mturk.HIT.getAssignments(hitId, {}, function(err, numResults, totalNumResults, pageNumber, assignments) {
+//     console.log(assignments);
+//     if (err){
+//       console.log("some error on getAssignments " + err);
+//     }
+//     else{
+//     assignments.forEach(function(assignment) {
+//       // review and store the data
+//       console.log(assignment);
 
-      if (assignment.assignmentStatus == "Approved"){
-           // should never get this, as assigments are immediately approved
-           console.log("it is already approved");
-      }
-      else{
+//       if (assignment.assignmentStatus == "Approved"){
+//            // should never get this, as assigments are immediately approved
+//            console.log("it is already approved");
+//       }
+//       else{
 
-     //reset array for fresh data
-     emotions = [];
+//      //reset array for fresh data
+//      emotions = [];
 
-          // it's fresh data, so we'll pull it out, post it to the server, and approve the comment
-        var peopleNum = assignment.answer.QuestionFormAnswers.Answer[0].SelectionIdentifier;
-        var carNum = assignment.answer.QuestionFormAnswers.Answer[1].SelectionIdentifier;
-        var jwNum = assignment.answer.QuestionFormAnswers.Answer[2].SelectionIdentifier;
-        getWeatherAPI();
+//           // it's fresh data, so we'll pull it out, post it to the server, and approve the comment
+//         var peopleNum = assignment.answer.QuestionFormAnswers.Answer[0].SelectionIdentifier;
+//         var carNum = assignment.answer.QuestionFormAnswers.Answer[1].SelectionIdentifier;
+//         var jwNum = assignment.answer.QuestionFormAnswers.Answer[2].SelectionIdentifier;
+//         getWeatherAPI();
 
-        dataSources[0] = peopleNum;
-        dataSources[1] = carNum;
-        dataSources[2] = jwNum;
+//         dataSources[0] = peopleNum;
+//         dataSources[1] = carNum;
+//         dataSources[2] = jwNum;
 
-        // go ahead and approve the task on mTurk, so we don't get the data back over and over
-      approveMTurK();
+//         // go ahead and approve the task on mTurk, so we don't get the data back over and over
+//       approveMTurK();
 
-        /// !!!!! Values for this period !!!!! ///
-        console.log ("Amount of people " + peopleNum);
-        console.log ("Amount of cars " + carNum);
-        console.log ("Amount of jaywalkers " + jwNum);
+//         /// !!!!! Values for this period !!!!! ///
+//         console.log ("Amount of people " + peopleNum);
+//         console.log ("Amount of cars " + carNum);
+//         console.log ("Amount of jaywalkers " + jwNum);
 
-        // Code goes here to post it to API
-        // we need to loop through the dataSources array, and post each measure to the API
+//         // Code goes here to post it to API
+//         // we need to loop through the dataSources array, and post each measure to the API
 
-        for (var i = 0; i<dataSources.length; i++){
+//         for (var i = 0; i<dataSources.length; i++){
   
-      // get the time stamp
-      var currentTime = new Date().getTime();
+//       // get the time stamp
+//       var currentTime = new Date().getTime();
 
-          if(i == 0){
-        var data = { "updates" : [{ "measureName": "People", "value": dataSources[i], "timeStamp" : currentTime, "description" : "people at " + currentTime}]};         
-            serverPost(data);
-          }
+//           if(i == 0){
+//         var data = { "updates" : [{ "measureName": "People", "value": dataSources[i], "timeStamp" : currentTime, "description" : "people at " + currentTime}]};         
+//             serverPost(data);
+//           }
 
-          else if(i == 1){
-        var data = { "updates" : [{ "measureName": "Cars", "value": dataSources[i], "timeStamp" : currentTime, "description" : "Cars at " + currentTime}]};         
-            serverPost(data);
-          }
+//           else if(i == 1){
+//         var data = { "updates" : [{ "measureName": "Cars", "value": dataSources[i], "timeStamp" : currentTime, "description" : "Cars at " + currentTime}]};         
+//             serverPost(data);
+//           }
 
-          else if(i == 2){
-        var data = { "updates" : [{ "measureName": "Jaywalkers", "value": dataSources[i], "timeStamp" : currentTime, "description" : "jaywalkers at " + currentTime}]};         
-            serverPost(data);         
-          }
+//           else if(i == 2){
+//         var data = { "updates" : [{ "measureName": "Jaywalkers", "value": dataSources[i], "timeStamp" : currentTime, "description" : "jaywalkers at " + currentTime}]};         
+//             serverPost(data);         
+//           }
 
-        }
+//         }
 
-        // now approve and dispose
-        function approveMTurK (){
-        var requesterFeedback = "nice work - thanks!";
-        assignment.approve(requesterFeedback, function(err) {
-            if(err){
-              console.log(err);
-            }
+//         // now approve and dispose
+//         function approveMTurK (){
+//         var requesterFeedback = "nice work - thanks!";
+//         assignment.approve(requesterFeedback, function(err) {
+//             if(err){
+//               console.log(err);
+//             }
 
-          console.log("approved the task in mturk!");
+//           console.log("approved the task in mturk!");
 
-        });
-      }
-       }
-    });
-  }
-  });
-});
+//         });
+//       }
+//        }
+//     });
+//   }
+//   });
+// });
 
 function getWeatherAPI(){
 
@@ -526,16 +535,16 @@ function determineEmotion(data){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "I will admit: I'm COLD.";
+            currentMessage = "I could use a hot chocolate.";
             break;
         case 2:
-            currentMessage = "Jeez it's cold out. Bundle up.";
+            currentMessage = "Ok, it's officially cold out.";
             break;
         case 3:
             currentMessage = "I guess Spring will come, some day?";
             break; 
       default:
-            currentMessage = "The weather is a bit bothersome.";
+            currentMessage = "I could use a hot chocolate.";
     } 
   }
   // lots of people and lots of cars
@@ -545,16 +554,16 @@ function determineEmotion(data){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
             break;
         case 2:
-            currentMessage = "Look both ways my friend!";
+            currentMessage = "Today is your day New York!";
             break;
         case 3:
-            currentMessage = "Streets are active today, eh?";
+            currentMessage = "Give me a high five?";
             break; 
       default:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
     }    
   }
   // lots of people, not lots of cars
@@ -564,16 +573,16 @@ function determineEmotion(data){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "Today is a good day";
+            currentMessage = "Today is a great day - smile!";
             break;
         case 2:
-            currentMessage = "NYC is a lovely city isn't it?";
+            currentMessage = "NYC is a lovely city with you in it.";
             break;
         case 3:
             currentMessage = "Stay happy New York";
             break; 
       default:
-            currentMessage = "Stay happy New York";
+            currentMessage = "Today is a great day - smile!";
     }    
   }
   // Not lots of people, not lots of cars
@@ -589,7 +598,7 @@ function determineEmotion(data){
             currentMessage = "Where is everyone?";
             break;
         case 3:
-            currentMessage = "I'm sleepy, how are you?";
+            currentMessage = "I'm sleepy too";
             break; 
       default:
             currentMessage = "ZzzZzzZZzZZzzZ";
@@ -602,17 +611,146 @@ function determineEmotion(data){
     var ran = Math.floor((Math.random()*3)+1);
     switch (ran) {
         case 1:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
             break;
         case 2:
-            currentMessage = "Look both ways my friend!";
+            currentMessage = "Today is your day New York!";
             break;
         case 3:
-            currentMessage = "Streets are active today, eh?";
+            currentMessage = "Give me a high five?";
             break; 
       default:
-            currentMessage = "Hey good-looking!";
+            currentMessage = "Have a fun day cause you're awesome!";
     }  
+  }
+
+
+  console.log("currentEmotion is " + currentEmotion);
+  console.log("currentMessage is " + currentMessage);
+
+  var emotionData = {
+    emotion: currentEmotion,
+    message: currentMessage
+  }
+  // emit the new emotion to the clients
+  sockets.sockets.emit('newData', emotionData);
+  
+  // update the text file that the yun reads
+  var n = yunData.toString();
+  fs.writeFile('./public/current.txt', n, function (err) {
+    if (err) throw err;
+    console.log('Text file is updated!');
+  });
+}
+
+// function to manually set emotions for demoing
+function manualEmotion(data){
+
+  var num = data;
+
+  console.log("manually determining emotion");
+
+  var yunData = 0; //data = 0 is attentively upbeat, data = 1 is happy, data = 2 is a bit down, data = 3 is distressed, data = 4 is sleepy
+
+  if (num == 0){
+    currentEmotion = "attentively upbeat";
+    yunData = 0;
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Have a fun day cause you're awesome!";
+            break;
+        case 2:
+            currentMessage = "Today is your day!";
+            break;
+        case 3:
+            currentMessage = "Give me a high five?";
+            break; 
+      default:
+            currentMessage = "Have a fun day cause you're awesome!";
+    }
+  }  
+
+  else if (num == 1){
+    currentEmotion = "happy";
+    yunData = 1;
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Today is a great day - smile!";
+            break;
+        case 2:
+            currentMessage = "NYC is a lovely city with you in it.";
+            break;
+        case 3:
+            currentMessage = "Stay happy New York";
+            break; 
+      default:
+            currentMessage = "Today is a great day - smile!";
+    }    
+  }
+
+  else if (num == 2){
+    currentEmotion = "a bit down";
+    yunData = 2;
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "I could use a hot chocolate.";
+            break;
+        case 2:
+            currentMessage = "Ok, it's officially cold out.";
+            break;
+        case 3:
+            currentMessage = "I guess Spring will come, some day?";
+            break; 
+      default:
+            currentMessage = "I could use a hot chocolate.";
+    }  
+  }
+
+  else if (num == 3){
+    currentEmotion = "distressed";
+    yunData = 3;
+    currentMessage = "Come on folks, no jaywalking please!"
+  }
+
+  else if (num == 4){
+    currentEmotion = "sleepy";
+    yunData = 4;
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+            break;
+        case 2:
+            currentMessage = "Where is everyone?";
+            break;
+        case 3:
+            currentMessage = "I'm sleepy too";
+            break; 
+      default:
+            currentMessage = "ZzzZzzZZzZZzzZ";
+    }  
+  }
+  // else, if it doesn't meet the above conditions, then he's his default state, which is Attentively upbeat
+  else{
+    currentEmotion = "attentively upbeat";
+    yunData = 0;
+    var ran = Math.floor((Math.random()*3)+1);
+    switch (ran) {
+        case 1:
+            currentMessage = "Have a fun day cause you're awesome!";
+            break;
+        case 2:
+            currentMessage = "Today is your day!";
+            break;
+        case 3:
+            currentMessage = "Give me a high five?";
+            break; 
+      default:
+            currentMessage = "Have a fun day cause you're awesome!";
+    } 
   }
 
 

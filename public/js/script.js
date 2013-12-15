@@ -31,14 +31,32 @@ $(function() {
         // set the image right
         var imageName = data.emotion.replace(/\s+/g, '-').toLowerCase();
         $("#image_emotion").attr("src","/img/"+imageName+".png");
-        // $("#vehicle").change(function(){
-        // var selected = $(this).val();
-        // var image = $("#selectedVehicle");
-        //     image.fadeOut('fast', function () {
-        //         image.attr('src', '/assets/images/mini/'+selected+'.png');
-        //         image.fadeIn('fast');
-        //     });
-        //  });
+    });
+
+    $( "#upbeat").click(function() {
+            console.log("upbeat clicked!");
+            var data = 0;
+            socket.emit('manualData', data);
+    });
+
+    $( "#happy" ).click(function() {
+            var data = 1;
+            socket.emit('manualData', data);
+    });
+
+    $( "#down" ).click(function() {
+            var data = 2;
+            socket.emit('manualData', data);
+    });
+
+    $( "#distressed" ).click(function() {
+            var data = 3;
+            socket.emit('manualData', data);
+    });
+
+    $( "#sleepy" ).click(function() {
+            var data = 4;
+            socket.emit('manualData', data);
     });
 
 })
