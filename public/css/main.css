@@ -62,7 +62,7 @@ h1 span{
     position:absolute;
     bottom: 0px;
 	background-image: url('/img/bg.png');
-	background-repeat-y: no-repeat;
+	background-repeat: repeat-x;
 	height: 100%;
 	width: 100%;
 }
@@ -78,7 +78,7 @@ h1 span{
 }
 #emotion{
 	position: relative;
-	font-size: 12px;
+	font-size: 11px;
 	margin-top: -277px;
 	margin-left: 119px;
 	z-index: 5;
