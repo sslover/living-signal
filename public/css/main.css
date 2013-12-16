@@ -13,7 +13,6 @@
 body{
 	font-family: 'Arvo', sans-serif;
 	background-color: #90DBF0;
-	background-image: url('/img/bg.png');
 	color: #fff;
 }
 
@@ -59,10 +58,18 @@ h1 span{
 	color: #00A2A5;
 }
 
-#streetscape{
-	position: fixed;
-    bottom: 5px;
+#bg{
     position:absolute;
+    bottom: 0px;
+	background-image: url('/img/bg.png');
+	background-repeat-y: no-repeat;
+	height: 100%;
+	width: 100%;
+}
+
+#streetscape{
+    position:absolute;
+    bottom: 5px;
 	background-image: url('/img/streetscape.png');
 	background-repeat: no-repeat;
 	z-index: 1;
